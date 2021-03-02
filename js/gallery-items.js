@@ -1,4 +1,4 @@
-export default [
+const items = [
   {
     preview:
       'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg',
@@ -63,6 +63,35 @@ export default [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+const itemsList = document.querySelector('.js-gallery');
+
+const itemsMarcup = createGalleryItem(items);
+
+itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
+
+function createGalleryItem(items) {
+  return items
+    .map(({ preview, original, description }) => {
+      return `
+    <li class="gallery__item">
+      <a
+        class="gallery__link"
+        href="${original}"
+      >
+      <img
+        class="gallery__image"
+        src="${preview}"
+        data-source="${original}"
+        alt="${description}"
+      />
+      </a>
+    </li>
+    `;
+    })
+    .join('');
+  console.log(markup);
+}
 
 // Разбей задание на несколько подзадач:
 
