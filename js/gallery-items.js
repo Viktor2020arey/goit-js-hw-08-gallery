@@ -1,4 +1,4 @@
-const items = [
+const images = [
   {
     preview:
       'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg',
@@ -65,13 +65,20 @@ const items = [
 ];
 
 const itemsList = document.querySelector('.js-gallery');
-
-const itemsMarcup = createGalleryItem(items);
+const modalContainer = document.querySelector('.js-lightbox');
+const modalImage = document.querySelector('.lightbox__image');
+const buttonClose = document.querySelector('[data-action="close-lightbox"]');
+const modal = document.querySelector('.lightbox__content');
+const itemsMarcup = createGalleryItem(images);
 
 itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
 
-function createGalleryItem(items) {
-  return items
+itemsList.addEventListener('click', onItemLIstClick);
+
+buttonClose.addEventListener('click', onClickBtnClose);
+
+function createGalleryItem(images) {
+  return images
     .map(({ preview, original, description }) => {
       return `
     <li class="gallery__item">
@@ -90,7 +97,23 @@ function createGalleryItem(items) {
     `;
     })
     .join('');
-  console.log(markup);
+}
+
+function onItemLIstClick(evt) {
+  evt.preventDefault();
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  }
+  modalContainer.classList.add('is-open');
+  modalImage.src = evt.target.getAttribute('data-source');
+  modalImage.alt = evt.target.alt;
+}
+
+function onClickBtnClose(evt) {
+  evt.preventDefault();
+  modalContainer.classList.remove('is-open');
+  modalImage.src = '';
+  modalImage.alt = '';
 }
 
 // Разбей задание на несколько подзадач:
