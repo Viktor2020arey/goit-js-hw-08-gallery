@@ -1,4 +1,4 @@
-const images = [
+export default [
   {
     preview:
       'https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg',
@@ -63,80 +63,3 @@ const images = [
     description: 'Lighthouse Coast Sea',
   },
 ];
-
-const itemsList = document.querySelector('.js-gallery');
-const modalContainer = document.querySelector('.js-lightbox');
-const modalImage = document.querySelector('.lightbox__image');
-const buttonClose = document.querySelector('[data-action="close-lightbox"]');
-const modal = document.querySelector('.lightbox__content');
-const itemsMarcup = createGalleryItem(images);
-
-itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
-
-itemsList.addEventListener('click', onItemLIstClick);
-
-buttonClose.addEventListener('click', onClickBtnClose);
-
-function createGalleryItem(images) {
-  return images
-    .map(({ preview, original, description }) => {
-      return `
-    <li class="gallery__item">
-      <a
-        class="gallery__link"
-        href="${original}"
-      >
-      <img
-        class="gallery__image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-      />
-      </a>
-    </li>
-    `;
-    })
-    .join('');
-}
-
-function onItemLIstClick(evt) {
-  evt.preventDefault();
-  if (evt.target.nodeName !== 'IMG') {
-    return;
-  }
-  modalContainer.classList.add('is-open');
-  modalImage.src = evt.target.getAttribute('data-source');
-  modalImage.alt = evt.target.alt;
-}
-
-function onClickBtnClose(evt) {
-  evt.preventDefault();
-  modalContainer.classList.remove('is-open');
-  modalImage.src = '';
-  modalImage.alt = '';
-}
-
-// Разбей задание на несколько подзадач:
-
-// Создание и рендер разметки по массиву данных и предоставленному шаблону.
-// Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
-// Открытие модального окна по клику на элементе галереи.
-// Подмена значения атрибута src элемента img.lightbox__image.
-// Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"].
-// Очистка значения атрибута src элемента img.lightbox__image. Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
-
-// Ссылка на оригинальное изображение должна храниться в data-атрибуте source на элементе img, и указываться в href ссылки (это необходимо для доступности).
-
-// <li class="gallery__item">
-//   <a
-//     class="gallery__link"
-//     href="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-//   >
-//     <img
-//       class="gallery__image"
-//       src="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546__340.jpg"
-//       data-source="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-//       alt="Tulips"
-//     />
-//   </a>
-// </li>;
