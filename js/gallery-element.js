@@ -1,4 +1,5 @@
 import images from './gallery-items.js';
+import { createGalleryItem } from './funct-create-gallery-item.js';
 
 const itemsList = document.querySelector('.js-gallery');
 const modal = document.querySelector('.lightbox');
@@ -12,26 +13,10 @@ itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
 itemsList.addEventListener('click', itemsListClick);
 btn.addEventListener('click', closeModal);
 
-function createGalleryItem(images) {
-  return images
-    .map(({ preview, original, description }, ind) => {
-      return `<li class="gallery__item">
-    <a
-    class="gallery__link"
-    href="${preview}"
-    >
-    <img
-        class="gallery__image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-        data-index ="${ind}"
-    />
-    </a>
-</li>`;
-    })
-    .join('');
-}
+// function onModalImg(src, alt) {
+//   const src = modalImg.src;
+//   const alt = modalImg.alt;
+// }
 
 function itemsListClick(e) {
   e.preventDefault();
