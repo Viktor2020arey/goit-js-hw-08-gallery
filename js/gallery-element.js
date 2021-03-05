@@ -1,74 +1,98 @@
-'use strict';
 import images from './gallery-items.js';
 
-const refs = {
-  itemsList: document.querySelector('.js-gallery'),
-  modalContainer: document.querySelector('.js-lightbox'),
-  modalImage: document.querySelector('.lightbox__image'),
-  buttonClose: document.querySelector('[data-action="close-lightbox"]'),
-  modal: document.querySelector('.lightbox__content'),
-  itemsMarcup: createGalleryItem(images),
-};
+const itemsList = document.querySelector('.js-gallery');
+const modal = document.querySelector('.lightbox');
+const btn = document.querySelector('.lightbox__button');
+const modalImg = document.querySelector('.lightbox__image');
 
+const itemsMarcup = createGalleryItem(images);
 let currentIndex = 0;
 
-refs.itemsList.insertAdjacentHTML('beforeend', refs.itemsMarcup);
-
-refs.itemsList.addEventListener('click', onItemLIstClick);
-
-refs.buttonClose.addEventListener('click', onClickBtnClose);
+itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
+itemsList.addEventListener('click', itemsListClick);
+btn.addEventListener('click', closeModal);
 
 function createGalleryItem(images) {
   return images
-    .map(({ preview, original, description }) => {
-      return `
-    <li class="gallery__item">
-      <a
-        class="gallery__link"
-        href="${original}"
-      >
-      <img
+    .map(({ preview, original, description }, ind) => {
+      return `<li class="gallery__item">
+    <a
+    class="gallery__link"
+    href="${preview}"
+    >
+    <img
         class="gallery__image"
         src="${preview}"
         data-source="${original}"
         alt="${description}"
-      />
-      </a>
-    </li>
-    `;
+        data-index ="${ind}"
+    />
+    </a>
+</li>`;
     })
     .join('');
 }
 
-function onItemLIstClick(evt) {
-  evt.preventDefault();
-  if (evt.target.nodeName !== 'IMG') {
+function itemsListClick(e) {
+  e.preventDefault();
+
+  if (e.target.nodeName !== 'IMG') {
     return;
   }
-  refs.modalContainer.classList.add('is-open');
-  refs.modalImage.src = evt.target.getAttribute('data-source');
-  refs.modalImage.alt = evt.target.alt;
+
+  modalImg.src = e.target.dataset.source;
+  modalImg.alt = e.target.alt;
+  currentIndex = e.target.dataset.index;
+  modal.classList.add('is-open');
+  modal.addEventListener('click', modalClick);
 
   window.addEventListener('keydown', keyHendler);
 }
 
-function onClickBtnClose(evt) {
-  evt.preventDefault();
-  refs.modalContainer.classList.remove('is-open');
-  refs.modalImage.src = '';
-  refs.modalImage.alt = '';
+function keyHendler(e) {
+  const key = e.code;
+  switch (key) {
+    case 'Escape':
+      closeModal();
+      break;
+    case 'ArrowRight':
+      onArrowRight();
+      break;
+    case 'ArrowLeft':
+      onArrowLeft();
+      break;
+  }
 }
 
-// ----------------------------------------------------------------------
+function onArrowRight() {
+  if (currentIndex + 1 > images.length - 1) {
+    currentIndex = 0;
+  } else {
+    currentIndex += 1;
+  }
+  modalImg.src = images[currentIndex].original;
+  modalImg.alt = images[currentIndex].description;
+}
 
-// function closeLightbox(evt) {
-//   if (evt.target === evt.currentTarget) {
-//     onClickBtnClose();
-//   }
-// }
+function onArrowLeft() {
+  if (currentIndex - 1 < 0) {
+    currentIndex = images.length - 1;
+  } else {
+    currentIndex -= 1;
+  }
+  modalImg.src = images[currentIndex].original;
+  modalImg.alt = images[currentIndex].description;
+}
 
-// function clickKey(evt) {
-//   if (evt.code === 'Escape') {
-//     onClickBtnClose();
-//   }
-// }
+function modalClick(e) {
+  if (e.target.nodeName === 'DIV') {
+    closeModal();
+  }
+}
+
+function closeModal() {
+  window.removeEventListener('keydown', keyHendler);
+  modal.classList.remove('is-open');
+  modalImg.src = '';
+  modalImg.alt = '';
+}
