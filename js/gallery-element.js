@@ -1,22 +1,21 @@
 import images from './gallery-items.js';
 import { createGalleryItem } from './funct-create-gallery-item.js';
-
-const itemsList = document.querySelector('.js-gallery');
-const modal = document.querySelector('.lightbox');
-const btn = document.querySelector('.lightbox__button');
-const modalImg = document.querySelector('.lightbox__image');
+import { refs } from './dom-element.js';
 
 const itemsMarcup = createGalleryItem(images);
 let currentIndex = 0;
 
-itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
-itemsList.addEventListener('click', itemsListClick);
-btn.addEventListener('click', closeModal);
+refs.itemsList.insertAdjacentHTML('beforeend', itemsMarcup);
+refs.itemsList.addEventListener('click', itemsListClick);
+refs.btn.addEventListener('click', closeModal);
 
-// function onModalImg(src, alt) {
-//   const src = modalImg.src;
-//   const alt = modalImg.alt;
-// }
+function ModalImgSrc(src) {
+  return (refs.modalImg.src = src);
+}
+
+function ModalImgAlt(alt) {
+  return (refs.modalImg.alt = alt);
+}
 
 function itemsListClick(e) {
   e.preventDefault();
@@ -24,12 +23,11 @@ function itemsListClick(e) {
   if (e.target.nodeName !== 'IMG') {
     return;
   }
-
-  modalImg.src = e.target.dataset.source;
-  modalImg.alt = e.target.alt;
+  ModalImgSrc(e.target.dataset.source);
+  ModalImgAlt(e.target.alt);
   currentIndex = e.target.dataset.index;
-  modal.classList.add('is-open');
-  modal.addEventListener('click', modalClick);
+  refs.modal.classList.add('is-open');
+  refs.modal.addEventListener('click', modalClick);
 
   window.addEventListener('keydown', keyHendler);
 }
@@ -55,8 +53,8 @@ function onArrowRight() {
   } else {
     currentIndex += 1;
   }
-  modalImg.src = images[currentIndex].original;
-  modalImg.alt = images[currentIndex].description;
+  ModalImgSrc(images[currentIndex].original);
+  ModalImgAlt(images[currentIndex].description);
 }
 
 function onArrowLeft() {
@@ -65,8 +63,8 @@ function onArrowLeft() {
   } else {
     currentIndex -= 1;
   }
-  modalImg.src = images[currentIndex].original;
-  modalImg.alt = images[currentIndex].description;
+  ModalImgSrc(images[currentIndex].original);
+  ModalImgAlt(images[currentIndex].description);
 }
 
 function modalClick(e) {
@@ -77,7 +75,7 @@ function modalClick(e) {
 
 function closeModal() {
   window.removeEventListener('keydown', keyHendler);
-  modal.classList.remove('is-open');
-  modalImg.src = '';
-  modalImg.alt = '';
+  refs.modal.classList.remove('is-open');
+  ModalImgSrc('');
+  ModalImgAlt('');
 }
